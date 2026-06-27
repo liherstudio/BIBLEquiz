@@ -490,9 +490,9 @@ const QS=[
    a:'食物', o:['金錢','食物','力量','智慧']},
 
   {c:'b',ch:false,s:'馬太福音 4:4',
-   q:'耶穌這句話是回應魔鬼的哪種試探？',
+   q:'魔鬼叫耶穌把石頭變成什麼？',
    verse:'馬太福音 4:3「那試探人的進前來，對他說：你若是神的兒子，可以吩咐這些石頭變成食物。」',
-   a:'叫耶穌把石頭變成食物', o:['叫耶穌跳下聖殿','叫耶穌把石頭變成食物','給耶穌看萬國的榮耀','叫耶穌下拜牠']},
+   a:'食物', o:['水','食物','金子','麵包']},
 ];
 
 // ── STATE ──
@@ -715,29 +715,36 @@ function verseHtml(){
   return'<div class="verse-box"><div class="verse-ref">📖 聖經原文</div>'+esc(curQ.verse)+'</div>';
 }
 
+let _answered=false; // guard against double submit
+
 function pickOpt(btn){
+  if(_answered)return;
+  _answered=true;
   document.querySelectorAll('#q-opts .opt').forEach(b=>b.disabled=true);
   const ok=norm(btn.dataset.o)===norm(curQ.a);
   btn.classList.add(ok?'cor':'wrg');
   if(!ok)document.querySelectorAll('#q-opts .opt').forEach(b=>{if(norm(b.dataset.o)===norm(curQ.a))b.classList.add('cor');});
   if(ok)sc[curT]+=curPts;
   updSbar();
-  document.getElementById('q-txt').innerHTML=fmtFilled(curQ.q,curQ.a);
-  // Show verse for bible questions
+  const qtxt=document.getElementById('q-txt');
+  if(qtxt)qtxt.innerHTML=fmtFilled(curQ.q,curQ.a);
   if(curQ.c==='b'&&curQ.verse){
-    const fb=document.getElementById('fill-fb')||document.getElementById('q-action');
-    const vEl=document.createElement('div');
-    vEl.innerHTML=verseHtml();
-    document.getElementById('q-action').insertBefore(vEl,document.getElementById('q-action').firstChild);
+    const action=document.getElementById('q-action');
+    if(action){const vEl=document.createElement('div');vEl.innerHTML=verseHtml();action.insertBefore(vEl,action.firstChild);}
   }
   appendNextBtn(ok);
 }
 
 function checkFill(){
-  const inp=document.getElementById('fill-in');if(!inp)return;
-  const val=norm(inp.value);if(!val)return;
+  if(_answered)return;
+  const inp=document.getElementById('fill-in');
+  if(!inp||inp.disabled)return;
+  const val=norm(inp.value);
+  if(!val)return;
+  _answered=true;
   inp.disabled=true;
-  document.querySelector('.fill-row .btn').disabled=true;
+  const sb=document.querySelector('.fill-row .btn');
+  if(sb)sb.disabled=true;
   const ok=val===norm(curQ.a);
   if(ok)sc[curT]+=curPts;
   updSbar();
@@ -745,20 +752,22 @@ function checkFill(){
   const fullLine=curQ.fl||curQ.q.replace(/___/,curQ.a);
   const isB=curQ.c==='b';
   const isSing=curPts===5;
-  if(ok){
-    fb.innerHTML=`<div class="fb ok">✓ 答對了！太棒了！${isSing?'<br><small>🎤 請清唱：<strong>'+esc(fullLine)+'</strong></small>':''}</div>${isB?verseHtml():''}`;
-  } else {
-    fb.innerHTML=`<div class="fb ng">✗ 答錯了。正確答案：<strong>${esc(curQ.a)}</strong>${isSing?'<br><small>🎤 完整歌詞：'+esc(fullLine)+'</small>':''}</div>${isB?verseHtml():''}`;
-  }
-  document.getElementById('q-txt').innerHTML=fmtFilled(curQ.q,curQ.a);
+  const okMsg='✓ 答對了！太棒了！'+(isSing?'<br><small>🎤 請清唱：<strong>'+esc(fullLine)+'</strong></small>':'');
+  const ngMsg='✗ 答錯了。正確答案：<strong>'+esc(curQ.a)+'</strong>'+(isSing?'<br><small>🎤 完整歌詞：'+esc(fullLine)+'</small>':'');
+  if(fb)fb.innerHTML='<div class="fb '+(ok?'ok':'ng')+'">'+(ok?okMsg:ngMsg)+'</div>'+(isB?verseHtml():'');
+  const qtxt=document.getElementById('q-txt');
+  if(qtxt)qtxt.innerHTML=fmtFilled(curQ.q,curQ.a);
   appendNextBtn(ok);
 }
 
 function appendNextBtn(ok){
+  if(document.getElementById('_nxt_btn'))return; // prevent duplicates
   const action=document.getElementById('q-action');
+  if(!action)return;
   const b=document.createElement('button');
+  b.id='_nxt_btn';
   b.className='btn full';b.style.marginTop='.5rem';
-  b.innerHTML=ok?`✓ 得 ${curPts} 分！→ 換隊`:`✗ 沒得分 → 換隊`;
+  b.innerHTML=ok?'✓ 得 '+curPts+' 分！→ 換隊':'✗ 沒得分 → 換隊';
   b.onclick=()=>{closeYT();curT=1-curT;go('turn');updSbar();resetTurnUI();};
   action.appendChild(b);
 }
