@@ -52,6 +52,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto
 .yt-wrap iframe{width:100%;height:100%;border:none;display:block}
 .badge{font-size:13px;padding:3px 10px;border-radius:6px;font-weight:600;display:inline-block}
 .badge.w{background:var(--wa-bg);color:var(--wa)}.badge.b{background:var(--bl-bg);color:var(--bl)}.badge.wu{background:#d4edda;color:#155724}
+.verse-box{background:var(--bl-bg);border:0.5px solid var(--bd);border-radius:var(--rs);padding:.875rem 1rem;margin-top:.625rem;font-size:14px;line-height:1.7;color:var(--text)}
+.verse-ref{font-size:12px;font-weight:600;color:var(--bl);margin-bottom:.25rem}
 .cat-label{display:flex;align-items:center;gap:8px;margin-bottom:.75rem}
 .pts-badge{font-size:13px;font-weight:700;background:var(--bg2);border-radius:6px;padding:3px 10px}
 input[type=text]{width:100%;font-size:16px;padding:.75rem;border:0.5px solid var(--bd2);border-radius:var(--rs);background:var(--bg);color:var(--text);font-family:inherit;outline:none;margin-bottom:1rem}
@@ -390,69 +392,105 @@ const QS=[
    post:'你是萬王之王，你是萬主之主',
    a:'眾水', fl:'如眾水聲音，主耶穌我們愛你', o:['眾水','雷鳴','萬人','大海']},
 
+
+  // 所以我不問為什麼
+  {c:'w',ch:true, s:'所以我不問為什麼',  yt:'WfvSyadK1VY',
+   pre:'就算洪水，把我的視線淹沒',
+   q:'所以我不問為什麼，因祢坐在___',
+   post:'祢的公義和信實從不落空',
+   a:'寶座', fl:'所以我不問為什麼，因祢坐在寶座', o:['寶座','榮耀','高位','天上']},
+
+  {c:'w',ch:true, s:'所以我不問為什麼',  yt:'WfvSyadK1VY',
+   pre:'祢的公義和信實從不落空',
+   q:'所以我不問為什麼，我憑___而活',
+   post:'不管怎麼，我為你活',
+   a:'信心', fl:'所以我不問為什麼，我憑信心而活', o:['信心','恩典','盼望','祢愛']},
+
+  {c:'w',ch:false,s:'所以我不問為什麼',  yt:'WfvSyadK1VY',
+   pre:'牽引我，每個腳蹤，如明光，直到午後',
+   q:'苦與痛，又算什麼，祢___為我存留',
+   post:'要成就極重極深，永恆的榮耀',
+   a:'冠冕', fl:'苦與痛，又算什麼，祢冠冕為我存留', o:['冠冕','恩典','應許','榮耀']},
+
   // ── 聖經 ──
   {c:'b',ch:false,s:'創世紀 挪亞方舟',
    q:'洪水開始時，挪亞幾歲？',
+   verse:'創世紀 7:6「洪水泛濫在地上的時候，挪亞正六百歲。」',
    a:'600歲', o:['500歲','600歲','700歲','800歲']},
 
   {c:'b',ch:false,s:'創世紀 挪亞方舟',
    q:'神與挪亞立約的記號是什麼？',
+   verse:'創世紀 9:13「我把虹放在雲彩中，這就可作我與地立約的記號了。」',
    a:'彩虹', o:['白雲','彩虹','鴿子','橄欖枝']},
 
   {c:'b',ch:false,s:'路加福音 西門捕魚',
    q:'耶穌叫西門把船划到哪裡撒網？',
+   verse:'路加福音 5:4「說完了話，就對西門說：把船開到水深之處，下網打魚。」',
    a:'水深之處', o:['岸邊','水深之處','湖中央','對岸']},
 
   {c:'b',ch:false,s:'路加福音 西門捕魚',
    q:'西門說「主啊，離開我，我是個___」',
+   verse:'路加福音 5:8「西門彼得看見，就俯伏在耶穌膝前，說：主啊，離開我，我是個罪人！」',
    a:'罪人', o:['罪人','卑微的人','不配的人','軟弱的人']},
 
   {c:'b',ch:false,s:'哥林多前書 12:18-20',
    q:'「肢體雖多，身子卻是___」',
+   verse:'哥林多前書 12:20「但如今肢體是多的，身子卻是一個。」',
    a:'一個', o:['許多','一個','幾個','無數']},
 
   {c:'b',ch:false,s:'哥林多前書 12:18-20',
    q:'「眼不能對手說：___」',
+   verse:'哥林多前書 12:21「眼不能對手說：我用不著你；頭也不能對腳說：我用不著你。」',
    a:'我用不著你', o:['你太慢了','我用不著你','你比我強','請讓開']},
 
   {c:'b',ch:false,s:'雅各書 1:19',
    q:'「快快地___，慢慢地說，慢慢地動怒」',
+   verse:'雅各書 1:19「你們各人要快快地聽，慢慢地說，慢慢地動怒。」',
    a:'聽', o:['說','聽','行','想']},
 
   {c:'b',ch:false,s:'雅各書 1:19',
    q:'雅各書1:19最後一句：慢慢地___',
+   verse:'雅各書 1:19「你們各人要快快地聽，慢慢地說，慢慢地動怒。」',
    a:'動怒', o:['說話','行動','動怒','論斷']},
 
   {c:'b',ch:false,s:'以弗所書 4:2-3',
    q:'「凡事謙虛、溫柔、___，用愛心互相寬容」',
+   verse:'以弗所書 4:2「凡事謙虛、溫柔、忍耐，用愛心互相寬容。」',
    a:'忍耐', o:['勇敢','忍耐','喜樂','仁慈']},
 
   {c:'b',ch:false,s:'以弗所書 4:2-3',
    q:'「盡心竭力保守聖靈所賜___的心」',
+   verse:'以弗所書 4:3「用和平彼此聯絡，竭力保守聖靈所賜合而為一的心。」',
    a:'合而為一', o:['清潔','合而為一','剛強','平安']},
 
   {c:'b',ch:false,s:'尼希米的故事',
    q:'尼希米在波斯王宮擔任什麼職務？',
+   verse:'尼希米記 1:11「我當時是王的酒政。」',
    a:'酒政', o:['侍衛長','酒政','財務官','書記官']},
 
   {c:'b',ch:false,s:'尼希米的故事',
    q:'尼希米重建耶路撒冷城牆，共花了幾天？',
+   verse:'尼希米記 6:15「以祿月二十五日城牆修完了，共用了五十二天。」',
    a:'52天', o:['40天','52天','70天','100天']},
 
   {c:'b',ch:false,s:'馬太福音 3:16-17',
    q:'耶穌受洗後，神的靈彷彿什麼降下來？',
+   verse:'馬太福音 3:16「耶穌受了洗，隨即從水裡上來，天忽然為他開了，他就看見神的靈彷彿鴿子降下，落在他身上。」',
    a:'鴿子', o:['老鷹','鴿子','麻雀','燕子']},
 
   {c:'b',ch:false,s:'馬太福音 3:16-17',
    q:'從天上有聲音說：「這是我的___，我所喜悅的」',
+   verse:'馬太福音 3:17「從天上有聲音說：這是我的愛子，我所喜悅的。」',
    a:'愛子', o:['僕人','愛子','先知','使者']},
 
   {c:'b',ch:false,s:'馬太福音 4:4',
    q:'「人活著，不是單靠___，乃是靠神口裡所出的一切話」',
+   verse:'馬太福音 4:4「耶穌回答說：經上記著說，人活著不是單靠食物，乃是靠神口裡所出的一切話。」',
    a:'食物', o:['金錢','食物','力量','智慧']},
 
   {c:'b',ch:false,s:'馬太福音 4:4',
    q:'耶穌這句話是回應魔鬼的哪種試探？',
+   verse:'馬太福音 4:3「那試探人的進前來，對他說：你若是神的兒子，可以吩咐這些石頭變成食物。」',
    a:'叫耶穌把石頭變成食物', o:['叫耶穌跳下聖殿','叫耶穌把石頭變成食物','給耶穌看萬國的榮耀','叫耶穌下拜牠']},
 ];
 
@@ -573,7 +611,7 @@ function showQ(){
   postEl.style.display=curQ.post?'block':'none';
 
   // Question with blank
-  document.getElementById('q-txt').innerHTML=fmtBlank(curQ.q);
+  document.getElementById('q-txt').innerHTML=fmtBlank(curQ.q,curQ.a);
 
   // YouTube hint button
   const ytSec=document.getElementById('yt-hint-section');
@@ -586,6 +624,7 @@ function showQ(){
 
   if(curPts===1){
     document.getElementById('q-opts').innerHTML=shuf(curQ.o).map(o=>`<button class="opt" data-o="${esc(o)}" onclick="pickOpt(this)">${esc(o)}</button>`).join('');
+    document.getElementById('q-action').innerHTML='<div id="fill-fb"></div>';
   } else {
     const hint=curPts===5?'輸入空格的答案，並清唱這句副歌：':'輸入空格的答案：';
     document.getElementById('q-action').innerHTML=`
@@ -600,7 +639,7 @@ function showQ(){
   go('question');
 }
 
-function fmtBlank(q){return q.replace(/___/g,'<span class="blk">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');}
+function fmtBlank(q,ans){const h='＿'.repeat(ans?ans.length:4);return q.replace(/___/g,'<span class="blk" style="min-width:unset;letter-spacing:2px">'+h+'</span>');}
 function fmtFilled(q,ans){return q.replace(/___/g,`<span class="ans-filled">${esc(ans)}</span>`);}
 
 // ── YOUTUBE ──
@@ -632,8 +671,14 @@ function pickOpt(btn){
   if(!ok)document.querySelectorAll('#q-opts .opt').forEach(b=>{if(norm(b.dataset.o)===norm(curQ.a))b.classList.add('cor');});
   if(ok)sc[curT]+=curPts;
   updSbar();
-  // Update question text with filled answer
   document.getElementById('q-txt').innerHTML=fmtFilled(curQ.q,curQ.a);
+  // Show verse for bible questions
+  if(curQ.c==='b'&&curQ.verse){
+    const fb=document.getElementById('fill-fb')||document.getElementById('q-action');
+    const vEl=document.createElement('div');
+    vEl.innerHTML=verseHtml();
+    document.getElementById('q-action').insertBefore(vEl,document.getElementById('q-action').firstChild);
+  }
   appendNextBtn(ok);
 }
 
