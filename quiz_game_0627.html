@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎵📖 詩歌聖經知識大挑戰</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#fff;--bg2:#f5f5f3;--bg3:#eeecea;--text:#1a1a1a;--text2:#6b6b6b;--bd:rgba(0,0,0,0.12);--bd2:rgba(0,0,0,0.22);--ok-bg:#eaf3de;--ok:#3b6d11;--ok-bd:#639922;--ng-bg:#fcebeb;--ng:#a32d2d;--ng-bd:#e24b4a;--r:12px;--rs:8px;--wa:#856404;--wa-bg:#fff3cd;--bl:#0c5460;--bl-bg:#d1ecf1}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;--text:#f5f5f5;--text2:#a0a0a0;--bd:rgba(255,255,255,0.12);--bd2:rgba(255,255,255,0.22);--ok-bg:#173404;--ok:#97c459;--ok-bd:#3b6d11;--ng-bg:#501313;--ng:#f09595;--ng-bd:#a32d2d;--wa:#f0c040;--wa-bg:#3a2e00;--bl:#80d4e8;--bl-bg:#003040}}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;background:var(--bg3);color:var(--text);min-height:100vh;display:flex;justify-content:center;padding:1.5rem 1rem}
+.app{background:var(--bg);border-radius:18px;width:100%;max-width:540px;padding:1.75rem 1.5rem;box-shadow:0 2px 20px rgba(0,0,0,.1);align-self:flex-start}
+.scr{display:none}.scr.on{display:block}
+.btn{background:var(--text);color:var(--bg);border:none;border-radius:var(--rs);padding:.75rem 1.5rem;font-size:15px;cursor:pointer;font-family:inherit;font-weight:500;transition:all .15s;display:inline-block}
+.btn:hover{opacity:.82}.btn.full{width:100%;display:block;text-align:center;margin-bottom:10px}
+.btn.sec{background:var(--bg);color:var(--text);border:0.5px solid var(--bd2)}.btn.sec:hover{background:var(--bg2)}
+.btn.big{font-size:17px;padding:1rem 2rem}
+.btn.ghost{background:none;color:var(--text2);border:0.5px solid var(--bd);font-size:13px;padding:.5rem 1rem}
+.btn.ghost:hover{background:var(--bg2);color:var(--text)}
+.opt{display:block;width:100%;background:var(--bg);border:0.5px solid var(--bd);border-radius:var(--rs);padding:.875rem 1rem;cursor:pointer;text-align:left;font-size:15px;margin-bottom:8px;font-family:inherit;color:var(--text);transition:all .15s}
+.opt:hover:not(:disabled){border-color:var(--bd2);background:var(--bg2)}
+.opt.cor{background:var(--ok-bg)!important;border-color:var(--ok-bd)!important;color:var(--ok)!important;font-weight:600}
+.opt.wrg{background:var(--ng-bg)!important;border-color:var(--ng-bd)!important;color:var(--ng)!important}
+.sbar{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;background:var(--bg2);border-radius:var(--r);padding:.875rem 1rem;margin-bottom:1rem}
+.sbar-t{font-size:13px;font-weight:500}.sbar-p{font-size:24px;font-weight:700;text-align:center}
+.sep{font-size:11px;color:var(--text2);text-align:center}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.pbtn{border:0.5px solid var(--bd);border-radius:var(--r);padding:1.25rem .5rem;cursor:pointer;text-align:center;background:var(--bg);font-family:inherit;transition:all .15s;color:var(--text)}
+.pbtn:hover,.pbtn.sel{border-color:var(--text);background:var(--text);color:var(--bg)}
+.pnum{font-size:30px;font-weight:700;display:block}
+.plbl{font-size:12px;display:block;margin-top:4px;opacity:.75}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.cbtn{border:0.5px solid var(--bd);border-radius:var(--rs);padding:.875rem .5rem;cursor:pointer;text-align:center;background:var(--bg);font-family:inherit;transition:all .15s;color:var(--text);font-size:14px}
+.cbtn:hover{border-color:var(--text);background:var(--bg2)}
+.cbtn.worship{border-color:var(--wa);background:var(--wa-bg);color:var(--wa)}
+.cbtn.bible{border-color:var(--bl);background:var(--bl-bg);color:var(--bl)}
+.ctx-box{background:var(--bg2);border-radius:var(--r);padding:1.5rem 1.5rem 1.25rem;margin-bottom:1.25rem}
+.ctx-src{font-size:12px;color:var(--text2);margin-bottom:.875rem;display:flex;align-items:center;gap:6px}
+.ctx-pre,.ctx-post{font-size:14px;color:var(--text2);line-height:1.7;font-style:italic}
+.ctx-pre{margin-bottom:.5rem}
+.ctx-post{margin-top:.5rem}
+.ctx-main{font-size:20px;line-height:1.9;word-break:keep-all;padding:.25rem 0}
+.blk{display:inline-block;border-bottom:2.5px solid var(--text);min-width:80px;margin:0 5px;vertical-align:middle}
+.ans-filled{display:inline-block;border-bottom:2.5px solid var(--ok-bd);min-width:80px;margin:0 5px;vertical-align:middle;color:var(--ok);font-weight:700;padding:0 4px}
+.fill-row{display:flex;gap:8px;margin-bottom:1rem}
+.fill-row input{flex:1;font-size:16px;padding:.75rem 1rem;border:0.5px solid var(--bd2);border-radius:var(--rs);background:var(--bg);color:var(--text);font-family:inherit;outline:none}
+.fill-row input:focus{border-color:var(--text)}.fill-row input:disabled{opacity:.6}
+.fb{padding:.875rem 1rem;border-radius:var(--rs);font-size:14px;line-height:1.6;margin-bottom:.875rem}
+.fb.ok{background:var(--ok-bg);color:var(--ok);border:0.5px solid var(--ok-bd)}
+.fb.ng{background:var(--ng-bg);color:var(--ng);border:0.5px solid var(--ng-bd)}
+.yt-wrap{border-radius:var(--r);overflow:hidden;margin-bottom:1rem;background:#000;aspect-ratio:16/9}
+.yt-wrap iframe{width:100%;height:100%;border:none;display:block}
+.badge{font-size:13px;padding:3px 10px;border-radius:6px;font-weight:600;display:inline-block}
+.badge.w{background:var(--wa-bg);color:var(--wa)}.badge.b{background:var(--bl-bg);color:var(--bl)}.badge.wu{background:#d4edda;color:#155724}
+.cat-label{display:flex;align-items:center;gap:8px;margin-bottom:.75rem}
+.pts-badge{font-size:13px;font-weight:700;background:var(--bg2);border-radius:6px;padding:3px 10px}
+input[type=text]{width:100%;font-size:16px;padding:.75rem;border:0.5px solid var(--bd2);border-radius:var(--rs);background:var(--bg);color:var(--text);font-family:inherit;outline:none;margin-bottom:1rem}
+label{font-size:13px;color:var(--text2);display:block;margin-bottom:4px}
+.row{display:flex;gap:8px}.row .btn{flex:1;margin-bottom:0}
+.divider{border:none;border-top:0.5px solid var(--bd);margin:1rem 0}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HOME -->
+<div id="s-home" class="scr">
+  <div style="text-align:center;padding:2rem 0 1.5rem">
+    <div style="font-size:44px;margin-bottom:.5rem">🎵📖</div>
+    <h1 style="font-size:22px;font-weight:600;margin-bottom:.25rem">詩歌聖經知識大挑戰</h1>
+    <p style="font-size:13px;color:var(--text2)">敬拜 ✦ 聖經 ✦ 搶分競賽</p>
+  </div>
+  <button class="btn big full" onclick="go('wu-intro')">🎤 暖場送分題（全體）</button>
+  <button class="btn big full sec" onclick="go('setup')">⚔️ 開始競賽（兩隊對決）</button>
+</div>
+
+<!-- WARMUP INTRO -->
+<div id="s-wu-intro" class="scr">
+  <div style="text-align:center;padding:1.5rem 0">
+    <div style="font-size:40px;margin-bottom:.5rem">🎤</div>
+    <h2 style="font-size:18px;font-weight:500;margin-bottom:.5rem">暖場送分題</h2>
+    <p style="font-size:14px;color:var(--text2);margin-bottom:1.5rem">上週造句搞笑範例回顧，全體搶答！共 3 題</p>
+    <button class="btn big" onclick="startWU()">開始！</button>
+  </div>
+</div>
+
+<!-- WARMUP Q -->
+<div id="s-wu-q" class="scr">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+    <span id="wu-ctr" style="font-size:13px;color:var(--text2)"></span>
+    <span class="badge wu">🎉 暖場送分</span>
+  </div>
+  <div class="ctx-box">
+    <p class="ctx-src">上週造句搞笑範例</p>
+    <p class="ctx-main" id="wu-q" style="font-size:17px;text-align:center"></p>
+  </div>
+  <div id="wu-opts"></div>
+  <div id="wu-after" style="display:none">
+    <div class="fb ok"><strong>✓ 正確答案：</strong><span id="wu-ans"></span></div>
+    <button class="btn full" id="wu-nxt" onclick="nextWU()">下一題 →</button>
+  </div>
+</div>
+
+<!-- WARMUP DONE -->
+<div id="s-wu-done" class="scr">
+  <div style="text-align:center;padding:2rem 0">
+    <div style="font-size:44px;margin-bottom:.5rem">🎉</div>
+    <h2 style="font-size:20px;font-weight:500;margin-bottom:.5rem">暖場結束！</h2>
+    <p style="font-size:14px;color:var(--text2);margin-bottom:1.5rem">準備進入正式競賽！</p>
+    <button class="btn big full" onclick="go('setup')">進入競賽 ⚔️</button>
+    <button class="btn sec full" onclick="go('home')">回首頁</button>
+  </div>
+</div>
+
+<!-- SETUP -->
+<div id="s-setup" class="scr">
+  <h2 style="font-size:18px;font-weight:500;margin-bottom:1.25rem">⚔️ 設定隊伍名稱</h2>
+  <label>隊伍一</label><input type="text" id="t1n" value="紅隊">
+  <label>隊伍二</label><input type="text" id="t2n" value="藍隊">
+  <button class="btn big full" onclick="startGame()">開始競賽！</button>
+</div>
+
+<!-- TURN -->
+<div id="s-turn" class="scr">
+  <div class="sbar">
+    <div><div class="sbar-t" id="tn0"></div><div class="sbar-p" id="sc0">0</div></div>
+    <div class="sep">VS</div>
+    <div style="text-align:right"><div class="sbar-t" id="tn1" style="text-align:right"></div><div class="sbar-p" id="sc1">0</div></div>
+  </div>
+  <div style="background:var(--bg2);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:1.25rem;text-align:center">
+    <p style="font-size:13px;color:var(--text2);margin-bottom:3px">輪到</p>
+    <p style="font-size:22px;font-weight:600" id="cur-t"></p>
+  </div>
+
+  <p style="font-size:13px;color:var(--text2);margin-bottom:.625rem">① 選擇分數與題型</p>
+  <div class="pgrid" id="pts-grid">
+    <button class="pbtn" id="pb1" onclick="selPts(1)"><span class="pnum">1</span><span class="plbl">分 · 選擇題</span></button>
+    <button class="pbtn" id="pb3" onclick="selPts(3)"><span class="pnum">3</span><span class="plbl">分 · 填空題</span></button>
+    <button class="pbtn" id="pb5" onclick="selPts(5)"><span class="pnum">5</span><span class="plbl">分 · 清唱題</span></button>
+  </div>
+
+  <div id="cat-section" style="display:none">
+    <p style="font-size:13px;color:var(--text2);margin-bottom:.625rem">② 選擇考題類型</p>
+    <div class="cgrid">
+      <button class="cbtn worship" onclick="selCat('w')"><div style="font-size:18px">🎵</div>詩歌</button>
+      <button class="cbtn bible" id="bible-btn" onclick="selCat('b')"><div style="font-size:18px">📖</div>聖經</button>
+      <button class="cbtn" id="rand-btn" onclick="selCat('r')"><div style="font-size:18px">🎲</div>隨機</button>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="row">
+    <button class="btn sec" onclick="swap()">↔ 換隊</button>
+    <button class="btn sec" onclick="endGame()">結束競賽</button>
+  </div>
+</div>
+
+<!-- QUESTION -->
+<div id="s-question" class="scr">
+  <div class="sbar">
+    <div><div class="sbar-t" id="qtn0"></div><div class="sbar-p" id="qsc0">0</div></div>
+    <div class="sep">VS</div>
+    <div style="text-align:right"><div class="sbar-t" id="qtn1" style="text-align:right"></div><div class="sbar-p" id="qsc1">0</div></div>
+  </div>
+
+  <div class="cat-label">
+    <span id="q-cat" class="badge"></span>
+    <span id="q-pts-lbl" class="pts-badge"></span>
+    <span id="q-team-lbl" style="font-size:13px;color:var(--text2);margin-left:auto"></span>
+  </div>
+
+  <div class="ctx-box">
+    <div class="ctx-src"><span id="q-src"></span></div>
+    <p class="ctx-pre" id="q-pre"></p>
+    <p class="ctx-main" id="q-txt"></p>
+    <p class="ctx-post" id="q-post"></p>
+  </div>
+
+  <!-- YouTube hint (worship only) -->
+  <div id="yt-hint-section" style="display:none;margin-bottom:1rem">
+    <button class="btn ghost full" id="yt-toggle-btn" onclick="toggleYT()" style="margin-bottom:.5rem">🎧 聽音樂提示（副歌）</button>
+    <div class="yt-wrap" id="yt-wrap" style="display:none">
+      <iframe id="yt-iframe" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div id="q-opts"></div>
+  <div id="q-action"></div>
+</div>
+
+<!-- FINAL -->
+<div id="s-final" class="scr">
+  <div style="text-align:center;padding:1.5rem 0 1rem">
+    <div style="font-size:44px;margin-bottom:.5rem">🏆</div>
+    <h2 style="font-size:20px;font-weight:600;margin-bottom:1.25rem">競賽結束！</h2>
+  </div>
+  <div id="final-body" style="margin-bottom:1.5rem"></div>
+  <button class="btn big full" onclick="restart()">再玩一次</button>
+  <button class="btn sec full" onclick="go('home')">回首頁</button>
+</div>
+
+</div>
+<script>
+const WU=[
+  {q:'「先……再……」—— 上週搞笑造句是？',a:'先生，再見。',o:['先洗手，再吃飯。','先準備好，再出發。','先生，再見。','先睡覺，再說吧。']},
+  {q:'「有的……有的……有的……」—— 上週搞笑造句是？',a:'媽媽你煮的飯太好吃了還有嗎？媽媽：有的有的有的',o:['有的同學愛唱歌，有的愛跳舞，有的愛睡覺。','媽媽你煮的飯太好吃了還有嗎？媽媽：有的有的有的','有的人高，有的人矮，有的人剛剛好。','有的快樂，有的悲傷，有的平靜。']},
+  {q:'「並不在……而是在……」—— 上週搞笑造句是？',a:'我並不在乎你的事，而是在乎我的事。',o:['問題並不在於成績，而是在於努力。','並不在乎結果，而是在乎過程。','我並不在乎你的事，而是在乎我的事。','並不在家，而是在學校。']}
+];
+
+// c=category w/b, ch=chorus(for清唱), s=source, pre/post=context lines, q=question, a=answer, o=options, yt=youtubeId, fl=full lyric for reveal
+const QS=[
+  // ── 詩歌 ──
+  {c:'w',ch:true, s:'賜福與你',        yt:'vjrMTpacP7w',
+   pre:'耶和華賜福給你，保護你',
+   q:'願主的___與你同在',
+   post:'願主的靈時時圍繞恩典降下',
+   a:'恩惠慈愛', fl:'願主的恩惠慈愛與你同在', o:['恩惠慈愛','平安喜樂','大能力量','榮耀聖名']},
+
+  {c:'w',ch:true, s:'賜福與你',        yt:'vjrMTpacP7w',
+   pre:'願主的恩惠慈愛與你同在',
+   q:'願主的___圍繞恩典降下',
+   post:'賜福與你，賜福與你',
+   a:'靈時時', fl:'願主的靈時時圍繞恩典降下', o:['靈時時','愛永遠','手緊緊','光照你']},
+
+  {c:'w',ch:false,s:'曠野中唯一的力量', yt:null,
+   pre:'祢是我曠野中唯一的力量',
+   q:'患難中的安慰，___中的盼望',
+   post:'我需要祢，主耶穌',
+   a:'黑暗', fl:'患難中的安慰，黑暗中的盼望', o:['黑暗','困難','患難','絕望']},
+
+  {c:'w',ch:true, s:'曠野中唯一的力量', yt:null,
+   pre:'祢賜給我身份與尊嚴',
+   q:'阿爸父，我是尊貴的___',
+   post:'靠祢的名得勝',
+   a:'兒女', fl:'阿爸父，我是尊貴的兒女', o:['兒女','僕人','孩子','信徒']},
+
+  {c:'w',ch:true, s:'好喜歡和你在一起', yt:'KpvMg3nh0Fo',
+   pre:'好喜歡與你在一起',
+   q:'好喜歡與你在一起，像___一樣地愛',
+   post:'你我不孤單，這裡有愛',
+   a:'耶穌', fl:'好喜歡與你在一起，像耶穌一樣地愛', o:['耶穌','天父','聖靈','神']},
+
+  {c:'w',ch:true, s:'好喜歡和你在一起', yt:'KpvMg3nh0Fo',
+   pre:'好喜歡與你在一起，像耶穌一樣地愛',
+   q:'你我不___，這裡有愛',
+   post:'好喜歡和你在一起',
+   a:'孤單', fl:'你我不孤單，這裡有愛', o:['孤單','害怕','軟弱','迷失']},
+
+  {c:'w',ch:true, s:'大山為我挪開',    yt:'_xJkYVZ50p0',
+   pre:'大山為我挪開，大海有路出來',
+   q:'祢手上的___，彰顯十架大愛',
+   post:'祢愛我永不更改，緊握祢雙手不放開',
+   a:'釘痕', fl:'祢手上的釘痕，彰顯十架大愛', o:['釘痕','傷疤','恩典','榮耀']},
+
+  {c:'w',ch:true, s:'大山為我挪開',    yt:'_xJkYVZ50p0',
+   pre:'祢手上的釘痕，彰顯十架大愛',
+   q:'祢愛我___，緊握祢雙手不放開',
+   post:'祢是我的神，是我的力量',
+   a:'永不更改', fl:'祢愛我永不更改，緊握祢雙手不放開', o:['永不更改','直到永遠','深深切切','不離不棄']},
+
+  {c:'w',ch:false,s:'每一天我需要你',  yt:null,
+   pre:'每一天，我需要祢',
+   q:'祢話語如___',
+   post:'滋潤我心田',
+   a:'甘霖', fl:'祢話語如甘霖', o:['甘霖','陽光','清泉','甘露']},
+
+  {c:'w',ch:true, s:'每一天我需要你',  yt:null,
+   pre:'這是我的呼求，每天都更愛祢',
+   q:'永不失去___愛祢的心',
+   post:'每一天，我需要祢',
+   a:'起初', fl:'永不失去起初愛祢的心', o:['起初','真心','熱切','渴慕']},
+
+  {c:'w',ch:true, s:'榮耀榮耀榮耀',    yt:null,
+   pre:'榮耀，榮耀，榮耀歸於祢',
+   q:'昔在今在___的神，全地都敬拜祢',
+   post:'我們依靠耶和華，因祢慈愛不動搖',
+   a:'永在', fl:'昔在今在永在的神，全地都敬拜祢', o:['永在','永遠','常在','長存']},
+
+  {c:'w',ch:true, s:'榮耀榮耀榮耀',    yt:null,
+   pre:'昔在今在永在的神，全地都敬拜祢',
+   q:'我們依靠耶和華，因祢___不動搖',
+   post:'昔在今在永在的神，日日與我同在',
+   a:'慈愛', fl:'我們依靠耶和華，因祢慈愛不動搖', o:['慈愛','信實','大能','應許']},
+
+  {c:'w',ch:true, s:'當我抬頭仰望',    yt:'vMjdPG60CS0',
+   pre:'患難困苦，死蔭幽谷',
+   q:'也無法將我與祢的___隔絕',
+   post:'當我放下自己垂靠祢懷裡',
+   a:'愛', fl:'也無法將我與祢的愛隔絕', o:['愛','恩典','同在','榮耀']},
+
+  {c:'w',ch:true, s:'當我抬頭仰望',    yt:'vMjdPG60CS0',
+   pre:'當我放下自己垂靠祢懷裡',
+   q:'我的靈___不停讚美祢',
+   post:'耶穌基督，我的救主',
+   a:'雀躍歡欣', fl:'我的靈雀躍歡欣不停讚美祢', o:['雀躍歡欣','喜樂滿溢','充滿感恩','歡呼高唱']},
+
+  {c:'w',ch:true, s:'那麼深的渴慕',    yt:'GGiphRkJ_jk',
+   pre:'每當敞開我的心，聖靈澆灌我滿溢',
+   q:'那麼深的渴慕，唯有___能滿足',
+   post:'跟隨你腳步，甘心樂意地順服',
+   a:'你', fl:'那麼深的渴慕，唯有你能滿足', o:['你','神','主','愛']},
+
+  {c:'w',ch:true, s:'那麼深的渴慕',    yt:'GGiphRkJ_jk',
+   pre:'那麼深的渴慕，唯有你能滿足',
+   q:'跟隨你腳步，___地順服',
+   post:'敞開我的心，邀請你聖靈充滿',
+   a:'甘心樂意', fl:'跟隨你腳步，甘心樂意地順服', o:['甘心樂意','全心全意','喜樂歡欣','謙卑溫柔']},
+
+  {c:'w',ch:true, s:'我的生命獻給你',  yt:'x5elrTM-t6k',
+   pre:'願祢的榮耀彰顯在我生命',
+   q:'我的生命獻給祢，背起___跟隨祢',
+   post:'耶穌我愛祢，喜樂地跟隨祢',
+   a:'十架', fl:'我的生命獻給祢，背起十架跟隨祢', o:['十架','重擔','使命','召命']},
+
+  {c:'w',ch:true, s:'我的生命獻給你',  yt:'x5elrTM-t6k',
+   pre:'我的生命獻給祢，背起十架跟隨祢',
+   q:'耶穌我愛祢，___地跟隨祢',
+   post:'賜給我屬於祢的夢想',
+   a:'喜樂', fl:'耶穌我愛祢，喜樂地跟隨祢', o:['喜樂','甘心','欣然','樂意']},
+
+  {c:'w',ch:false,s:'深不見底的愛',    yt:null,
+   pre:'不管做對做錯，愛我一樣多',
+   q:'天父祢都___過我每一根頭髮',
+   post:'我深知道，祢不會放開我',
+   a:'細數', fl:'天父祢都細數過我每一根頭髮', o:['細數','記念','保護','知道']},
+
+  {c:'w',ch:true, s:'深不見底的愛',    yt:null,
+   pre:'不管做對做錯，愛我一樣多',
+   q:'恩典如___一樣多',
+   post:'深不見底的愛，填滿我',
+   a:'繁星', fl:'恩典如繁星一樣多', o:['繁星','沙粒','海浪','雨滴']},
+
+  {c:'w',ch:true, s:'恩典之路',         yt:null,
+   pre:'一步又一步，這是恩典之路',
+   q:'你愛、你手，將我緊緊___',
+   post:'不再回頭，我要跟隨祢',
+   a:'抓住', fl:'你愛、你手，將我緊緊抓住', o:['抓住','牽引','保護','扶持']},
+
+  {c:'w',ch:true, s:'恩典之路',         yt:null,
+   pre:'萬人中唯獨，你愛我認識我',
+   q:'永遠不變的應許，這一生都是___',
+   post:'你愛、你手，將我緊緊抓住',
+   a:'祝福', fl:'永遠不變的應許，這一生都是祝福', o:['祝福','恩典','盼望','喜樂']},
+
+  {c:'w',ch:true, s:'深深地敬拜',       yt:'KvNBVA9gcTQ',
+   pre:'深深地敬拜，深深地獻上我的愛',
+   q:'一生只願用生命來___祢的愛',
+   post:'深深地敬拜，深深地渴慕祢同在',
+   a:'回應', fl:'一生只願用生命來回應祢的愛', o:['回應','宣揚','讚美','傳揚']},
+
+  {c:'w',ch:true, s:'深深地敬拜',       yt:'KvNBVA9gcTQ',
+   pre:'一生只願用生命來回應祢的愛',
+   q:'深深地敬拜，深深地___祢同在',
+   post:'願我更多被祢吸引，與祢心連心',
+   a:'渴慕', fl:'深深地敬拜，深深地渴慕祢同在', o:['渴慕','尋求','感謝','敬拜']},
+
+  {c:'w',ch:false,s:'這是聖潔之地',     yt:'1m7MZHDzL-4',
+   pre:'這是聖潔之地，神在這裡，前來獻上最深的敬拜',
+   q:'神在這裡，設立___，在榮耀的敬拜裡',
+   post:'我全心來敬拜祢主，高舉雙手敬拜祢主',
+   a:'寶座', fl:'神在這裡，設立寶座，在榮耀的敬拜裡', o:['寶座','居所','聖殿','榮光']},
+
+  {c:'w',ch:true, s:'這是聖潔之地',     yt:'1m7MZHDzL-4',
+   pre:'在祢大能榮耀光中，我俯伏在祢寶座前',
+   q:'我與眾天使俯伏，___敬拜祢',
+   post:'我全心來敬拜祢主，高舉雙手敬拜祢主',
+   a:'深深', fl:'我與眾天使俯伏，深深敬拜祢', o:['深深','虔誠','全心','謙卑']},
+
+  {c:'w',ch:true, s:'永恆唯一的盼望',   yt:'0JjM9JBIjmg',
+   pre:'只要你開口呼喊耶穌',
+   q:'耶穌是生命，一切問題的___',
+   post:'耶穌是生命，一切黑暗的亮光',
+   a:'解答', fl:'耶穌是生命，一切問題的解答', o:['解答','救主','盼望','答案']},
+
+  {c:'w',ch:true, s:'永恆唯一的盼望',   yt:'0JjM9JBIjmg',
+   pre:'耶穌是生命，一切黑暗的亮光',
+   q:'將___變為喜樂，將懼怕變為力量',
+   post:'耶穌是永恆唯一的盼望',
+   a:'憂傷', fl:'將憂傷變為喜樂，將懼怕變為力量', o:['憂傷','黑暗','軟弱','眼淚']},
+
+  {c:'w',ch:true, s:'我揚聲敬拜',       yt:'CGaTvceKIrs',
+   pre:'我揚聲敬拜，我敬拜耶穌',
+   q:'所有的___，全都歸於你',
+   post:'我高舉雙手，我敬拜耶穌',
+   a:'榮耀權柄', fl:'所有的榮耀權柄，全都歸於你', o:['榮耀權柄','讚美敬拜','恩典慈愛','聖潔榮光']},
+
+  {c:'w',ch:true, s:'我揚聲敬拜',       yt:'CGaTvceKIrs',
+   pre:'我高舉雙手，我敬拜耶穌',
+   q:'如___聲音，主耶穌我們愛你',
+   post:'你是萬王之王，你是萬主之主',
+   a:'眾水', fl:'如眾水聲音，主耶穌我們愛你', o:['眾水','雷鳴','萬人','大海']},
+
+  // ── 聖經 ──
+  {c:'b',ch:false,s:'創世紀 挪亞方舟',
+   q:'洪水開始時，挪亞幾歲？',
+   a:'600歲', o:['500歲','600歲','700歲','800歲']},
+
+  {c:'b',ch:false,s:'創世紀 挪亞方舟',
+   q:'神與挪亞立約的記號是什麼？',
+   a:'彩虹', o:['白雲','彩虹','鴿子','橄欖枝']},
+
+  {c:'b',ch:false,s:'路加福音 西門捕魚',
+   q:'耶穌叫西門把船划到哪裡撒網？',
+   a:'水深之處', o:['岸邊','水深之處','湖中央','對岸']},
+
+  {c:'b',ch:false,s:'路加福音 西門捕魚',
+   q:'西門說「主啊，離開我，我是個___」',
+   a:'罪人', o:['罪人','卑微的人','不配的人','軟弱的人']},
+
+  {c:'b',ch:false,s:'哥林多前書 12:18-20',
+   q:'「肢體雖多，身子卻是___」',
+   a:'一個', o:['許多','一個','幾個','無數']},
+
+  {c:'b',ch:false,s:'哥林多前書 12:18-20',
+   q:'「眼不能對手說：___」',
+   a:'我用不著你', o:['你太慢了','我用不著你','你比我強','請讓開']},
+
+  {c:'b',ch:false,s:'雅各書 1:19',
+   q:'「快快地___，慢慢地說，慢慢地動怒」',
+   a:'聽', o:['說','聽','行','想']},
+
+  {c:'b',ch:false,s:'雅各書 1:19',
+   q:'雅各書1:19最後一句：慢慢地___',
+   a:'動怒', o:['說話','行動','動怒','論斷']},
+
+  {c:'b',ch:false,s:'以弗所書 4:2-3',
+   q:'「凡事謙虛、溫柔、___，用愛心互相寬容」',
+   a:'忍耐', o:['勇敢','忍耐','喜樂','仁慈']},
+
+  {c:'b',ch:false,s:'以弗所書 4:2-3',
+   q:'「盡心竭力保守聖靈所賜___的心」',
+   a:'合而為一', o:['清潔','合而為一','剛強','平安']},
+
+  {c:'b',ch:false,s:'尼希米的故事',
+   q:'尼希米在波斯王宮擔任什麼職務？',
+   a:'酒政', o:['侍衛長','酒政','財務官','書記官']},
+
+  {c:'b',ch:false,s:'尼希米的故事',
+   q:'尼希米重建耶路撒冷城牆，共花了幾天？',
+   a:'52天', o:['40天','52天','70天','100天']},
+
+  {c:'b',ch:false,s:'馬太福音 3:16-17',
+   q:'耶穌受洗後，神的靈彷彿什麼降下來？',
+   a:'鴿子', o:['老鷹','鴿子','麻雀','燕子']},
+
+  {c:'b',ch:false,s:'馬太福音 3:16-17',
+   q:'從天上有聲音說：「這是我的___，我所喜悅的」',
+   a:'愛子', o:['僕人','愛子','先知','使者']},
+
+  {c:'b',ch:false,s:'馬太福音 4:4',
+   q:'「人活著，不是單靠___，乃是靠神口裡所出的一切話」',
+   a:'食物', o:['金錢','食物','力量','智慧']},
+
+  {c:'b',ch:false,s:'馬太福音 4:4',
+   q:'耶穌這句話是回應魔鬼的哪種試探？',
+   a:'叫耶穌把石頭變成食物', o:['叫耶穌跳下聖殿','叫耶穌把石頭變成食物','給耶穌看萬國的榮耀','叫耶穌下拜牠']},
+];
+
+// ── STATE ──
+let wuI=0, teams=['紅隊','藍隊'], sc=[0,0], curT=0, curPts=0, curQ=null;
+let usedW=[], usedB=[], usedAll=[], usedCh=[];
+let selPtsVal=null, ytOpen=false;
+
+// ── HELPERS ──
+function go(id){document.querySelectorAll('.scr').forEach(x=>x.classList.remove('on'));document.getElementById('s-'+id).classList.add('on');}
+function shuf(a){return[...a].sort(()=>Math.random()-.5);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+function norm(s){return String(s).trim();}
+
+function updSbar(){
+  ['tn0','tn1','qtn0','qtn1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=teams[i%2];});
+  ['sc0','sc1','qsc0','qsc1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=sc[i%2];});
+  const ct=document.getElementById('cur-t');if(ct)ct.textContent=teams[curT];
+}
+
+function drawFrom(pool, used){
+  let avail=pool.filter(i=>!used.includes(i));
+  if(!avail.length){used.length=0;avail=[...pool];}
+  const idx=avail[Math.floor(Math.random()*avail.length)];
+  used.push(idx);return idx;
+}
+
+// ── WARMUP ──
+function startWU(){wuI=0;go('wu-q');showWU();}
+function showWU(){
+  const q=WU[wuI];
+  document.getElementById('wu-ctr').textContent=`第 ${wuI+1} 題 ／ 共 ${WU.length} 題`;
+  document.getElementById('wu-q').textContent=q.q;
+  document.getElementById('wu-ans').textContent=q.a;
+  document.getElementById('wu-after').style.display='none';
+  document.getElementById('wu-opts').innerHTML=shuf(q.o).map(o=>`<button class="opt" data-o="${esc(o)}" onclick="pickWU(this)">${esc(o)}</button>`).join('');
+  document.getElementById('wu-nxt').textContent=wuI<WU.length-1?'下一題 →':'完成暖場 🎉';
+}
+function pickWU(btn){
+  document.querySelectorAll('#wu-opts .opt').forEach(b=>b.disabled=true);
+  const ok=norm(btn.dataset.o)===norm(WU[wuI].a);
+  btn.classList.add(ok?'cor':'wrg');
+  if(!ok)document.querySelectorAll('#wu-opts .opt').forEach(b=>{if(norm(b.dataset.o)===norm(WU[wuI].a))b.classList.add('cor');});
+  document.getElementById('wu-after').style.display='block';
+}
+function nextWU(){wuI++;if(wuI>=WU.length)go('wu-done');else showWU();}
+
+// ── GAME ──
+function startGame(){
+  teams[0]=document.getElementById('t1n').value.trim()||'紅隊';
+  teams[1]=document.getElementById('t2n').value.trim()||'藍隊';
+  sc=[0,0];curT=0;usedW=[];usedB=[];usedAll=[];usedCh=[];
+  go('turn');updSbar();resetTurnUI();
+}
+function restart(){sc=[0,0];curT=0;usedW=[];usedB=[];usedAll=[];usedCh=[];go('turn');updSbar();resetTurnUI();}
+function swap(){curT=1-curT;updSbar();}
+
+function resetTurnUI(){
+  selPtsVal=null;
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('cat-section').style.display='none';
+}
+
+function selPts(p){
+  selPtsVal=p;
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('pb'+p).classList.add('sel');
+  // 清唱題只能選詩歌，直接跳過類型選擇
+  if(p===5){
+    document.getElementById('cat-section').style.display='none';
+    selCat('w');
+  } else {
+    document.getElementById('bible-btn').style.display='';
+    document.getElementById('rand-btn').style.display='';
+    document.getElementById('cat-section').style.display='block';
+  }
+}
+
+function selCat(cat){
+  curPts=selPtsVal;
+  let pool, used;
+  if(cat==='w'){
+    if(curPts===5){pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='w'&&QS[i].ch);used=usedCh;}
+    else{pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='w');used=usedW;}
+  } else if(cat==='b'){
+    pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='b');used=usedB;
+  } else {
+    if(curPts===5){pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='w'&&QS[i].ch);used=usedCh;}
+    else{pool=QS.map((q,i)=>i);used=usedAll;}
+  }
+  const idx=drawFrom(pool,used);
+  curQ=QS[idx];
+  showQ();
+}
+
+// ── QUESTION SCREEN ──
+function showQ(){
+  closeYT();
+  updSbar();
+
+  // Category badge
+  const catEl=document.getElementById('q-cat');
+  const isW=curQ.c==='w';
+  catEl.textContent=isW?'🎵 詩歌題':'📖 聖經題';
+  catEl.className='badge '+(isW?'w':'b');
+  document.getElementById('q-pts-lbl').textContent=curPts+' 分';
+  document.getElementById('q-team-lbl').textContent=`${teams[curT]} 作答`;
+
+  // Source
+  document.getElementById('q-src').textContent=curQ.s;
+
+  // Context lines
+  const preEl=document.getElementById('q-pre');
+  const postEl=document.getElementById('q-post');
+  preEl.textContent=curQ.pre||'';
+  preEl.style.display=curQ.pre?'block':'none';
+  postEl.textContent=curQ.post||'';
+  postEl.style.display=curQ.post?'block':'none';
+
+  // Question with blank
+  document.getElementById('q-txt').innerHTML=fmtBlank(curQ.q);
+
+  // YouTube hint button
+  const ytSec=document.getElementById('yt-hint-section');
+  ytSec.style.display=(isW&&curQ.yt)?'block':'none';
+  document.getElementById('yt-toggle-btn').textContent='🎧 聽音樂提示（副歌）';
+
+  // Answer area
+  document.getElementById('q-opts').innerHTML='';
+  document.getElementById('q-action').innerHTML='';
+
+  if(curPts===1){
+    document.getElementById('q-opts').innerHTML=shuf(curQ.o).map(o=>`<button class="opt" data-o="${esc(o)}" onclick="pickOpt(this)">${esc(o)}</button>`).join('');
+  } else {
+    const hint=curPts===5?'輸入空格的答案，並清唱這句副歌：':'輸入空格的答案：';
+    document.getElementById('q-action').innerHTML=`
+      <p style="font-size:13px;color:var(--text2);margin-bottom:6px">${hint}</p>
+      <div class="fill-row">
+        <input type="text" id="fill-in" placeholder="輸入答案…" autocomplete="off"/>
+        <button class="btn" onclick="checkFill()">確認</button>
+      </div>
+      <div id="fill-fb"></div>`;
+    setTimeout(()=>{const i=document.getElementById('fill-in');if(i){i.focus();i.onkeydown=e=>{if(e.key==='Enter')checkFill();};}},80);
+  }
+  go('question');
+}
+
+function fmtBlank(q){return q.replace(/___/g,'<span class="blk">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');}
+function fmtFilled(q,ans){return q.replace(/___/g,`<span class="ans-filled">${esc(ans)}</span>`);}
+
+// ── YOUTUBE ──
+function toggleYT(){
+  const wrap=document.getElementById('yt-wrap');
+  const btn=document.getElementById('yt-toggle-btn');
+  if(!ytOpen){
+    document.getElementById('yt-iframe').src=`https://www.youtube.com/embed/${curQ.yt}?rel=0&autoplay=1`;
+    wrap.style.display='block';
+    btn.textContent='✕ 關閉音樂';
+    ytOpen=true;
+  } else {closeYT();}
+}
+function closeYT(){
+  const wrap=document.getElementById('yt-wrap');
+  const iframe=document.getElementById('yt-iframe');
+  if(wrap){wrap.style.display='none';}
+  if(iframe){iframe.src='';}
+  ytOpen=false;
+  const btn=document.getElementById('yt-toggle-btn');
+  if(btn)btn.textContent='🎧 聽音樂提示（副歌）';
+}
+
+// ── ANSWERING ──
+function pickOpt(btn){
+  document.querySelectorAll('#q-opts .opt').forEach(b=>b.disabled=true);
+  const ok=norm(btn.dataset.o)===norm(curQ.a);
+  btn.classList.add(ok?'cor':'wrg');
+  if(!ok)document.querySelectorAll('#q-opts .opt').forEach(b=>{if(norm(b.dataset.o)===norm(curQ.a))b.classList.add('cor');});
+  if(ok)sc[curT]+=curPts;
+  updSbar();
+  // Update question text with filled answer
+  document.getElementById('q-txt').innerHTML=fmtFilled(curQ.q,curQ.a);
+  appendNextBtn(ok);
+}
+
+function checkFill(){
+  const inp=document.getElementById('fill-in');if(!inp)return;
+  const val=norm(inp.value);if(!val)return;
+  inp.disabled=true;
+  document.querySelector('.fill-row .btn').disabled=true;
+  const ok=val===norm(curQ.a);
+  if(ok)sc[curT]+=curPts;
+  updSbar();
+  const fb=document.getElementById('fill-fb');
+  const fullLine=curQ.fl||curQ.q.replace(/___/,curQ.a);
+  if(ok){
+    fb.innerHTML=`<div class="fb ok">✓ 答對了！太棒了！${curPts===5?'<br><small>🎤 請清唱：<strong>'+esc(fullLine)+'</strong></small>':''}</div>`;
+  } else {
+    fb.innerHTML=`<div class="fb ng">✗ 答錯了。正確答案：<strong>${esc(curQ.a)}</strong>${curPts===5?'<br><small>🎤 完整歌詞：'+esc(fullLine)+'</small>':''}</div>`;
+  }
+  document.getElementById('q-txt').innerHTML=fmtFilled(curQ.q,curQ.a);
+  appendNextBtn(ok);
+}
+
+function appendNextBtn(ok){
+  const action=document.getElementById('q-action');
+  const b=document.createElement('button');
+  b.className='btn full';b.style.marginTop='.5rem';
+  b.innerHTML=ok?`✓ 得 ${curPts} 分！→ 換隊`:`✗ 沒得分 → 換隊`;
+  b.onclick=()=>{closeYT();curT=1-curT;go('turn');updSbar();resetTurnUI();};
+  action.appendChild(b);
+}
+
+// ── FINAL ──
+function endGame(){
+  const w=sc[0]>sc[1]?teams[0]:sc[1]>sc[0]?teams[1]:null;
+  document.getElementById('final-body').innerHTML=`
+    <div style="display:flex;gap:12px;margin-bottom:1rem">
+      <div style="flex:1;background:var(--bg2);border-radius:var(--r);padding:1.25rem;text-align:center">
+        <div style="font-size:14px;font-weight:500;margin-bottom:.25rem">${esc(teams[0])}</div>
+        <div style="font-size:42px;font-weight:700">${sc[0]}</div><div style="font-size:12px;color:var(--text2)">分</div>
+      </div>
+      <div style="flex:1;background:var(--bg2);border-radius:var(--r);padding:1.25rem;text-align:center">
+        <div style="font-size:14px;font-weight:500;margin-bottom:.25rem">${esc(teams[1])}</div>
+        <div style="font-size:42px;font-weight:700">${sc[1]}</div><div style="font-size:12px;color:var(--text2)">分</div>
+      </div>
+    </div>
+    <div style="text-align:center;padding:1.25rem;background:var(--bg2);border-radius:var(--r)">
+      ${w?`<div style="font-size:24px;margin-bottom:.25rem">🏆</div><div style="font-size:18px;font-weight:600">${esc(w)} 獲勝！</div>`:'<div style="font-size:20px;font-weight:600">平局！🎊</div>'}
+    </div>`;
+  go('final');
+}
+
+go('home');
+</script>
+</body>
+</html>
