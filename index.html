@@ -52,6 +52,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto
 .yt-wrap iframe{width:100%;height:100%;border:none;display:block}
 .badge{font-size:13px;padding:3px 10px;border-radius:6px;font-weight:600;display:inline-block}
 .badge.w{background:var(--wa-bg);color:var(--wa)}.badge.b{background:var(--bl-bg);color:var(--bl)}.badge.wu{background:#d4edda;color:#155724}
+.remain-lbl{font-size:11px;margin-top:3px;opacity:.75;display:block}
 .verse-box{background:var(--bl-bg);border:0.5px solid var(--bd);border-radius:var(--rs);padding:.875rem 1rem;margin-top:.625rem;font-size:14px;line-height:1.7;color:var(--text)}
 .verse-ref{font-size:12px;font-weight:600;color:var(--bl);margin-bottom:.25rem}
 .cat-label{display:flex;align-items:center;gap:8px;margin-bottom:.75rem}
@@ -134,19 +135,25 @@ label{font-size:13px;color:var(--text2);display:block;margin-bottom:4px}
     <p style="font-size:22px;font-weight:600" id="cur-t"></p>
   </div>
 
+  <div id="all-done-banner" style="display:none;background:var(--ok-bg);border:0.5px solid var(--ok-bd);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:1rem;text-align:center">
+    <div style="font-size:24px;margin-bottom:.25rem">🎉</div>
+    <div style="font-weight:600;color:var(--ok)">全部題目已答完！</div>
+    <div style="font-size:13px;color:var(--ok);margin-top:.25rem">可以直接結束競賽公布成績</div>
+  </div>
+
   <p style="font-size:13px;color:var(--text2);margin-bottom:.625rem">① 選擇分數與題型</p>
   <div class="pgrid" id="pts-grid">
-    <button class="pbtn" id="pb1" onclick="selPts(1)"><span class="pnum">1</span><span class="plbl">分 · 選擇題</span></button>
-    <button class="pbtn" id="pb3" onclick="selPts(3)"><span class="pnum">3</span><span class="plbl">分 · 填空題</span></button>
-    <button class="pbtn" id="pb5" onclick="selPts(5)"><span class="pnum">5</span><span class="plbl">分 · 清唱題</span></button>
+    <button class="pbtn" id="pb1" onclick="selPts(1)"><span class="pnum">1</span><span class="plbl">分 · 選擇題</span><span class="remain-lbl" id="r-pts1"></span></button>
+    <button class="pbtn" id="pb3" onclick="selPts(3)"><span class="pnum">3</span><span class="plbl">分 · 填空題</span><span class="remain-lbl" id="r-pts3"></span></button>
+    <button class="pbtn" id="pb5" onclick="selPts(5)"><span class="pnum">5</span><span class="plbl">分 · 清唱題</span><span class="remain-lbl" id="r-pts5"></span></button>
   </div>
 
   <div id="cat-section" style="display:none">
     <p style="font-size:13px;color:var(--text2);margin-bottom:.625rem">② 選擇考題類型</p>
     <div class="cgrid">
-      <button class="cbtn worship" onclick="selCat('w')"><div style="font-size:18px">🎵</div>詩歌</button>
-      <button class="cbtn bible" id="bible-btn" onclick="selCat('b')"><div style="font-size:18px">📖</div>聖經</button>
-      <button class="cbtn" id="rand-btn" onclick="selCat('r')"><div style="font-size:18px">🎲</div>隨機</button>
+      <button class="cbtn worship" id="cat-w-btn" onclick="selCat('w')"><div style="font-size:18px">🎵</div>詩歌<div class="remain-lbl" id="r-w"></div></button>
+      <button class="cbtn bible" id="cat-b-btn" onclick="selCat('b')"><div style="font-size:18px">📖</div>聖經<div class="remain-lbl" id="r-b"></div></button>
+      <button class="cbtn" id="cat-r-btn" onclick="selCat('r')"><div style="font-size:18px">🎲</div>隨機<div class="remain-lbl" id="r-r"></div></button>
     </div>
   </div>
 
@@ -597,24 +604,64 @@ function startGame(){
 function restart(){sc=[0,0];curT=0;usedQs=new Set();go('turn');updSbar();resetTurnUI();}
 function swap(){curT=1-curT;updSbar();}
 
+function poolRemain(cat,pts){
+  const p5=pts===5;
+  let pool;
+  if(cat==='w') pool=QS.map((_,i)=>i).filter(i=>p5?(QS[i].c==='w'&&QS[i].ch):QS[i].c==='w');
+  else if(cat==='b') pool=QS.map((_,i)=>i).filter(i=>QS[i].c==='b');
+  else pool=QS.map((_,i)=>i).filter(i=>p5?(QS[i].c==='w'&&QS[i].ch):true);
+  return pool.filter(i=>!usedQs.has(i)).length;
+}
+
+function updateCounts(){
+  const pts=selPtsVal||1;
+  const wn=poolRemain('w',pts), bn=poolRemain('b',1), rn=poolRemain('r',pts), ch=poolRemain('w',5);
+  const totalN=QS.filter((_,i)=>!usedQs.has(i)).length;
+
+  // Pts buttons — show total or chorus remaining
+  const r1=document.getElementById('r-pts1'); if(r1)r1.textContent=totalN?totalN+'題剩':'';
+  const r3=document.getElementById('r-pts3'); if(r3)r3.textContent=totalN?totalN+'題剩':'';
+  const r5=document.getElementById('r-pts5'); if(r5)r5.textContent=ch?ch+'題剩':'';
+
+  // Category buttons
+  const rw=document.getElementById('r-w'); if(rw)rw.textContent=wn+'題剩';
+  const rb=document.getElementById('r-b'); if(rb)rb.textContent=bn+'題剩';
+  const rr=document.getElementById('r-r'); if(rr)rr.textContent=rn+'題剩';
+
+  // Disable empty categories
+  const wb=document.getElementById('cat-w-btn');
+  const bb=document.getElementById('cat-b-btn');
+  const rb2=document.getElementById('cat-r-btn');
+  if(wb){wb.disabled=wn===0;wb.style.opacity=wn===0?'.35':'1';}
+  if(bb){bb.disabled=bn===0;bb.style.opacity=bn===0?'.35':'1';}
+  if(rb2){rb2.disabled=rn===0;rb2.style.opacity=rn===0?'.35':'1';}
+
+  // Disable pts-5 if no chorus left
+  const pb5=document.getElementById('pb5');
+  if(pb5){pb5.disabled=ch===0;pb5.style.opacity=ch===0?'.35':'1';}
+
+  // All-done banner
+  const banner=document.getElementById('all-done-banner');
+  if(banner)banner.style.display=totalN===0?'block':'none';
+}
+
 function resetTurnUI(){
   selPtsVal=null;
-  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('sel'));
+  document.querySelectorAll('.pbtn').forEach(b=>{b.classList.remove('sel');b.disabled=false;b.style.opacity='1';});
   document.getElementById('cat-section').style.display='none';
+  updateCounts();
 }
 
 function selPts(p){
   selPtsVal=p;
   document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('sel'));
   document.getElementById('pb'+p).classList.add('sel');
-  // 清唱題只能選詩歌，直接跳過類型選擇
   if(p===5){
     document.getElementById('cat-section').style.display='none';
     selCat('w');
   } else {
-    document.getElementById('bible-btn').style.display='';
-    document.getElementById('rand-btn').style.display='';
     document.getElementById('cat-section').style.display='block';
+    updateCounts();
   }
 }
 
