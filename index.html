@@ -204,9 +204,10 @@ label{font-size:13px;color:var(--text2);display:block;margin-bottom:4px}
 </div>
 <script>
 const WU=[
-  {q:'「先……再……」—— 上週搞笑造句是？',a:'先生，再見。',o:['先洗手，再吃飯。','先準備好，再出發。','先生，再見。','先睡覺，再說吧。']},
-  {q:'「有的……有的……有的……」—— 上週搞笑造句是？',a:'媽媽你煮的飯太好吃了還有嗎？媽媽：有的有的有的',o:['有的同學愛唱歌，有的愛跳舞，有的愛睡覺。','媽媽你煮的飯太好吃了還有嗎？媽媽：有的有的有的','有的人高，有的人矮，有的人剛剛好。','有的快樂，有的悲傷，有的平靜。']},
-  {q:'「並不在……而是在……」—— 上週搞笑造句是？',a:'我並不在乎你的事，而是在乎我的事。',o:['問題並不在於成績，而是在於努力。','並不在乎結果，而是在乎過程。','我並不在乎你的事，而是在乎我的事。','並不在家，而是在學校。']}
+  {type:'fill',  s:'先……再……',      q:'上週「先……再……」最搞笑的造句是？',hint:'先___，再___',                a:'先生，再見。'},
+  {type:'choice',s:'有的……有的……有的……',q:'「有的……有的……有的……」—— 上週搞笑造句是？',               a:'媽媽你煮的飯太好吃了還有嗎？媽媽：有的有的有的',o:['有的同學愛唱歌，有的愛跳舞，有的愛睡覺。','媽媽你煮的飯太好吃了還有嗎？媽媽：有的有的有的','有的人高，有的人矮，有的人剛剛好。','有的快樂，有的悲傷，有的平靜。']},
+  {type:'choice',s:'並不在……而是在……',q:'「並不在……而是在……」—— 上週搞笑造句是？',                    a:'我並不在乎你的事，而是在乎我的事。',o:['問題並不在於成績，而是在於努力。','並不在乎結果，而是在乎過程。','我並不在乎你的事，而是在乎我的事。','並不在家，而是在學校。']},
+  {type:'acapella',s:'榮耀榮耀榮耀（清唱）',q:'榮耀，榮耀，榮耀歸於你，\n聖哉，聖哉，聖哉，\n___，___，___歸於你，',a:'榮耀，榮耀，榮耀',full:'榮耀，榮耀，榮耀歸於你，/聖哉，聖哉，聖哉，/榮耀，榮耀，榮耀歸於你，'},
 ];
 
 // c=category w/b, ch=chorus(for清唱), s=source, pre/post=context lines, q=question, a=answer, o=options, yt=youtubeId, fl=full lyric for reveal
@@ -503,7 +504,7 @@ let selPtsVal=null, ytOpen=false;
 function go(id){document.querySelectorAll('.scr').forEach(x=>x.classList.remove('on'));document.getElementById('s-'+id).classList.add('on');}
 function shuf(a){return[...a].sort(()=>Math.random()-.5);}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-function norm(s){return String(s).trim();}
+function norm(s){return String(s).trim().replace(/[\s，。！？、；：「」『』【】《》〈〉…—～·,.!?;:'"''\-]/g,'');}
 
 function updSbar(){
   ['tn0','tn1','qtn0','qtn1'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=teams[i%2];});
@@ -523,12 +524,57 @@ function startWU(){wuI=0;go('wu-q');showWU();}
 function showWU(){
   const q=WU[wuI];
   document.getElementById('wu-ctr').textContent=`第 ${wuI+1} 題 ／ 共 ${WU.length} 題`;
-  document.getElementById('wu-q').textContent=q.q;
-  document.getElementById('wu-ans').textContent=q.a;
   document.getElementById('wu-after').style.display='none';
-  document.getElementById('wu-opts').innerHTML=shuf(q.o).map(o=>`<button class="opt" data-o="${esc(o)}" onclick="pickWU(this)">${esc(o)}</button>`).join('');
+  document.getElementById('wu-opts').innerHTML='';
+
+  if(q.type==='acapella'){
+    // 清唱題：顯示歌詞段落（有空格）
+    const lines=q.q.split('\n');
+    document.getElementById('wu-q').innerHTML=lines.map(l=>
+      `<span style="display:block;line-height:1.9">${l.replace(/___/g,'<span style="display:inline-block;border-bottom:2px solid var(--text);min-width:40px;margin:0 3px">＿＿</span>')}</span>`
+    ).join('');
+    document.getElementById('wu-opts').innerHTML=`
+      <div class="hint-box" style="margin-bottom:.875rem"><span style="font-size:18px;flex-shrink:0">🎤</span><span>清唱題！填入空格，並清唱這段歌詞</span></div>
+      <div class="fill-row"><input type="text" id="wu-fill" placeholder="空格答案…" autocomplete="off"/><button class="btn" onclick="checkWUFill()">確認</button></div>
+      <div id="wu-fill-fb"></div>`;
+    setTimeout(()=>{const i=document.getElementById('wu-fill');if(i){i.focus();i.onkeydown=e=>{if(e.key==='Enter')checkWUFill();};}},80);
+    document.getElementById('wu-ans').textContent=q.full;
+  } else if(q.type==='fill'){
+    // 填空題：顯示題目 + 句型提示 + 輸入框
+    document.getElementById('wu-q').textContent=q.q;
+    const hintHtml=q.hint?q.hint.replace(/___/g,'<span style="display:inline-block;border-bottom:2px solid var(--text);min-width:50px;margin:0 3px;vertical-align:middle"></span>'):'';
+    document.getElementById('wu-opts').innerHTML=`
+      ${hintHtml?`<p style="font-size:18px;margin-bottom:.875rem;line-height:2">${hintHtml}</p>`:''}
+      <div class="fill-row"><input type="text" id="wu-fill" placeholder="輸入答案…" autocomplete="off"/><button class="btn" onclick="checkWUFill()">確認</button></div>
+      <div id="wu-fill-fb"></div>`;
+    setTimeout(()=>{const i=document.getElementById('wu-fill');if(i){i.focus();i.onkeydown=e=>{if(e.key==='Enter')checkWUFill();};}},80);
+    document.getElementById('wu-ans').textContent=q.a;
+  } else {
+    // 選擇題
+    document.getElementById('wu-q').textContent=q.q;
+    document.getElementById('wu-opts').innerHTML=shuf(q.o).map(o=>`<button class="opt" data-o="${esc(o)}" onclick="pickWU(this)">${esc(o)}</button>`).join('');
+    document.getElementById('wu-ans').textContent=q.a;
+  }
   document.getElementById('wu-nxt').textContent=wuI<WU.length-1?'下一題 →':'完成暖場 🎉';
 }
+
+function checkWUFill(){
+  const q=WU[wuI];
+  const inp=document.getElementById('wu-fill');if(!inp)return;
+  const val=norm(inp.value);if(!val)return;
+  inp.disabled=true;
+  const sb=document.querySelector('.fill-row .btn');if(sb)sb.disabled=true;
+  const ok=val===norm(q.a);
+  const fb=document.getElementById('wu-fill-fb');
+  const isSing=q.type==='acapella';
+  if(ok){
+    fb.innerHTML=`<div class="fb ok" style="margin-top:.5rem">✓ 答對了！太棒了！${isSing?'<br><small>🎤 請清唱：<strong>'+esc(q.full)+'</strong></small>':''}</div>`;
+  } else {
+    fb.innerHTML=`<div class="fb ng" style="margin-top:.5rem">✗ 答錯了。正確答案：<strong>${esc(q.a)}</strong>${isSing?'<br><small>🎤 完整歌詞：'+esc(q.full)+'</small>':''}</div>`;
+  }
+  document.getElementById('wu-after').style.display='block';
+}
+
 function pickWU(btn){
   document.querySelectorAll('#wu-opts .opt').forEach(b=>b.disabled=true);
   const ok=norm(btn.dataset.o)===norm(WU[wuI].a);
@@ -692,10 +738,12 @@ function checkFill(){
   updSbar();
   const fb=document.getElementById('fill-fb');
   const fullLine=curQ.fl||curQ.q.replace(/___/,curQ.a);
+  const isB=curQ.c==='b';
+  const isSing=curPts===5;
   if(ok){
-    fb.innerHTML=`<div class="fb ok">✓ 答對了！太棒了！${curPts===5?'<br><small>🎤 請清唱：<strong>'+esc(fullLine)+'</strong></small>':''}</div>`;
+    fb.innerHTML=`<div class="fb ok">✓ 答對了！太棒了！${isSing?'<br><small>🎤 請清唱：<strong>'+esc(fullLine)+'</strong></small>':''}</div>${isB?verseHtml():''}`;
   } else {
-    fb.innerHTML=`<div class="fb ng">✗ 答錯了。正確答案：<strong>${esc(curQ.a)}</strong>${curPts===5?'<br><small>🎤 完整歌詞：'+esc(fullLine)+'</small>':''}</div>`;
+    fb.innerHTML=`<div class="fb ng">✗ 答錯了。正確答案：<strong>${esc(curQ.a)}</strong>${isSing?'<br><small>🎤 完整歌詞：'+esc(fullLine)+'</small>':''}</div>${isB?verseHtml():''}`;
   }
   document.getElementById('q-txt').innerHTML=fmtFilled(curQ.q,curQ.a);
   appendNextBtn(ok);
