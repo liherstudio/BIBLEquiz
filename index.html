@@ -497,7 +497,7 @@ const QS=[
 
 // ── STATE ──
 let wuI=0, teams=['紅隊','藍隊'], sc=[0,0], curT=0, curPts=0, curQ=null;
-let usedW=[], usedB=[], usedAll=[], usedCh=[];
+let usedQs=new Set(); // all answered questions this game
 let selPtsVal=null, ytOpen=false;
 
 // ── HELPERS ──
@@ -512,11 +512,14 @@ function updSbar(){
   const ct=document.getElementById('cur-t');if(ct)ct.textContent=teams[curT];
 }
 
-function drawFrom(pool, used){
-  let avail=pool.filter(i=>!used.includes(i));
-  if(!avail.length){used.length=0;avail=[...pool];}
+function drawFrom(pool){
+  // Filter out already-answered questions
+  let avail=pool.filter(i=>!usedQs.has(i));
+  // If this category is exhausted, fall back to all questions in category
+  if(!avail.length) return null;
   const idx=avail[Math.floor(Math.random()*avail.length)];
-  used.push(idx);return idx;
+  usedQs.add(idx);
+  return idx;
 }
 
 // ── WARMUP ──
@@ -537,7 +540,7 @@ function showWU(){
       <div class="hint-box" style="margin-bottom:.875rem"><span style="font-size:18px;flex-shrink:0">🎤</span><span>清唱題！填入空格，並清唱這段歌詞</span></div>
       <div class="fill-row"><input type="text" id="wu-fill" placeholder="空格答案…" autocomplete="off"/><button class="btn" onclick="checkWUFill()">確認</button></div>
       <div id="wu-fill-fb"></div>`;
-    setTimeout(()=>{const i=document.getElementById('wu-fill');if(i){i.focus();i.onkeydown=e=>{if(e.key==='Enter')checkWUFill();};}},80);
+    setTimeout(()=>{const i=document.getElementById('wu-fill');if(i){i.focus();}},80);
     document.getElementById('wu-ans').textContent=q.full;
   } else if(q.type==='fill'){
     // 填空題：顯示題目 + 句型提示 + 輸入框
@@ -547,7 +550,7 @@ function showWU(){
       ${hintHtml?`<p style="font-size:18px;margin-bottom:.875rem;line-height:2">${hintHtml}</p>`:''}
       <div class="fill-row"><input type="text" id="wu-fill" placeholder="輸入答案…" autocomplete="off"/><button class="btn" onclick="checkWUFill()">確認</button></div>
       <div id="wu-fill-fb"></div>`;
-    setTimeout(()=>{const i=document.getElementById('wu-fill');if(i){i.focus();i.onkeydown=e=>{if(e.key==='Enter')checkWUFill();};}},80);
+    setTimeout(()=>{const i=document.getElementById('wu-fill');if(i){i.focus();}},80);
     document.getElementById('wu-ans').textContent=q.a;
   } else {
     // 選擇題
@@ -588,10 +591,10 @@ function nextWU(){wuI++;if(wuI>=WU.length)go('wu-done');else showWU();}
 function startGame(){
   teams[0]=document.getElementById('t1n').value.trim()||'紅隊';
   teams[1]=document.getElementById('t2n').value.trim()||'藍隊';
-  sc=[0,0];curT=0;usedW=[];usedB=[];usedAll=[];usedCh=[];
+  sc=[0,0];curT=0;usedQs=new Set();
   go('turn');updSbar();resetTurnUI();
 }
-function restart(){sc=[0,0];curT=0;usedW=[];usedB=[];usedAll=[];usedCh=[];go('turn');updSbar();resetTurnUI();}
+function restart(){sc=[0,0];curT=0;usedQs=new Set();go('turn');updSbar();resetTurnUI();}
 function swap(){curT=1-curT;updSbar();}
 
 function resetTurnUI(){
@@ -617,23 +620,30 @@ function selPts(p){
 
 function selCat(cat){
   curPts=selPtsVal;
-  let pool, used;
+  let pool;
   if(cat==='w'){
-    if(curPts===5){pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='w'&&QS[i].ch);used=usedCh;}
-    else{pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='w');used=usedW;}
+    if(curPts===5) pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='w'&&QS[i].ch);
+    else           pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='w');
   } else if(cat==='b'){
-    pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='b');used=usedB;
+    pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='b');
   } else {
-    if(curPts===5){pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='w'&&QS[i].ch);used=usedCh;}
-    else{pool=QS.map((q,i)=>i);used=usedAll;}
+    if(curPts===5) pool=QS.map((q,i)=>i).filter(i=>QS[i].c==='w'&&QS[i].ch);
+    else           pool=QS.map((_,i)=>i);
   }
-  const idx=drawFrom(pool,used);
+  const idx=drawFrom(pool);
+  if(idx===null){
+    // All questions in this category have been answered — notify host
+    alert('這個類型的題目已經全部出完了！');
+    resetTurnUI();
+    return;
+  }
   curQ=QS[idx];
   showQ();
 }
 
 // ── QUESTION SCREEN ──
 function showQ(){
+  _answered=false;
   closeYT();
   updSbar();
 
@@ -680,7 +690,7 @@ function showQ(){
         <button class="btn" onclick="checkFill()">確認</button>
       </div>
       <div id="fill-fb"></div>`;
-    setTimeout(()=>{const i=document.getElementById('fill-in');if(i){i.focus();i.onkeydown=e=>{if(e.key==='Enter')checkFill();};}},80);
+    setTimeout(()=>{const i=document.getElementById('fill-in');if(i){i.focus();}},80);
   }
   go('question');
 }
